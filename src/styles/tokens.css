@@ -27,17 +27,17 @@
   /* ── Color — RGB triplets for alpha compositing ──────────────────────
      Use as `rgb(var(--color-x-rgb) / <alpha>)` wherever a translucent
      tint of a base color is needed, instead of a one-off rgba() literal. */
-  --color-primary-rgb: 168, 106, 83;
-  --color-text-rgb: 29, 36, 51;
-  --color-muted-rgb: 91, 100, 119;
-  --color-white-rgb: 255, 255, 255;
-  --color-black-rgb: 0, 0, 0;
-  --color-ink-rgb: 35, 31, 29;
-  --color-border-rgb: 200, 188, 178;
-  --color-border-strong-rgb: 180, 168, 158;
-  --color-surface-rgb: 248, 244, 240;
-  --color-danger-rgb: 160, 63, 51;
-  --color-backdrop-rgb: 30, 24, 20;
+  --color-primary-rgb: 168 106 83;
+  --color-text-rgb: 29 36 51;
+  --color-muted-rgb: 91 100 119;
+  --color-white-rgb: 255 255 255;
+  --color-black-rgb: 0 0 0;
+  --color-ink-rgb: 35 31 29;
+  --color-border-rgb: 200 188 178;
+  --color-border-strong-rgb: 180 168 158;
+  --color-surface-rgb: 248 244 240;
+  --color-danger-rgb: 160 63 51;
+  --color-backdrop-rgb: 30 24 20;
 
   /* ── Spacing scale — 0.25rem (4px) steps, Tailwind-style ─────────────── */
   --space-0: 0;
