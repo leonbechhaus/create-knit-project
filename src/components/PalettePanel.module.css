@@ -1,0 +1,33 @@
+.palette {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.addBtn {
+  width: 3rem;
+  height: 3rem;
+  border-radius: var(--radius-md);
+  border: 0.0938rem dashed rgb(var(--color-primary-rgb) / 0.35);
+  background: transparent;
+  color: rgb(var(--color-primary-rgb) / 0.55);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition:
+    border-color var(--duration-base),
+    color var(--duration-base),
+    background var(--duration-base);
+}
+.addBtn:hover {
+  border-color: rgb(var(--color-primary-rgb) / 0.65);
+  color: var(--color-primary-strong);
+  background: rgb(var(--color-primary-rgb) / 0.06);
+}

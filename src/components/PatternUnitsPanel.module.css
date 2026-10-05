@@ -1,0 +1,11 @@
+/* ── Pattern unit list ── */
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.activeIcon {
+  color: var(--color-primary-strong);
+  flex-shrink: 0;
+}

@@ -1,0 +1,141 @@
+.menu {
+  position: absolute;
+  z-index: var(--z-flyout);
+  width: max-content;
+  min-width: 11.25rem;
+  padding: 0.375rem;
+  border-radius: var(--radius-md);
+  background: rgb(var(--color-surface-rgb) / 0.98);
+  border: 1px solid rgb(var(--color-border-rgb) / 0.4);
+  box-shadow: var(--shadow-flyout);
+  font-size: var(--text-sm);
+  color: var(--color-text);
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 0.5625rem;
+  padding: 0.4375rem 0.5625rem;
+  border-radius: var(--radius-md);
+  background: transparent;
+  border: none;
+  color: var(--color-text);
+  font: inherit;
+  text-align: left;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.item:hover,
+.item:focus-visible {
+  background: rgb(var(--color-primary-rgb) / 0.12);
+  outline: none;
+}
+
+.item svg {
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
+.itemDanger {
+  color: var(--color-danger);
+}
+
+.itemDanger svg {
+  opacity: 0.85;
+}
+
+.itemDanger:hover,
+.itemDanger:focus-visible {
+  background: rgb(var(--color-danger-rgb) / 0.12);
+}
+
+.chevron {
+  margin-left: auto;
+  opacity: 0.5;
+}
+
+.divider {
+  height: 1px;
+  margin: 0.3125rem 0.4375rem;
+  background: rgb(var(--color-border-strong-rgb) / 0.35);
+}
+
+/* ── Color submenu: fly-out panel attached beside the main menu ── */
+.submenu {
+  position: fixed;
+  z-index: var(--z-flyout-sub);
+  padding: var(--space-2);
+  border-radius: var(--radius-md);
+  background: rgb(var(--color-surface-rgb) / 0.98);
+  border: 1px solid rgb(var(--color-border-rgb) / 0.4);
+  box-shadow: var(--shadow-flyout);
+}
+
+.submenuDivider {
+  height: 1px;
+  margin: 0 0 var(--space-2);
+  background: rgb(var(--color-border-strong-rgb) / 0.35);
+}
+
+.swatchGrid {
+  display: grid;
+  grid-template-columns: repeat(5, 1.875rem);
+  gap: var(--space-2);
+}
+
+.empty {
+  padding: 0.125rem 0.125rem 0;
+  max-width: 11.25rem;
+  line-height: 1.4;
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+
+/* ── Pattern-unit submenu: name the capture, then save ── */
+.patternForm {
+  display: flex;
+  gap: var(--space-1);
+  width: 12.5rem;
+}
+
+.patternInput {
+  flex: 1;
+  min-width: 0;
+  background: rgb(var(--color-white-rgb) / 0.75);
+  border: 1px solid rgb(var(--color-border-rgb) / 0.45);
+  border-radius: var(--radius-md);
+  padding: 0.375rem 0.5rem;
+  font-size: var(--text-sm);
+  color: var(--color-text);
+  outline: none;
+  transition:
+    border-color var(--duration-base),
+    box-shadow var(--duration-base);
+}
+.patternInput:focus {
+  border-color: rgb(var(--color-primary-rgb) / 0.5);
+  box-shadow: 0 0 0 0.1875rem rgb(var(--color-primary-rgb) / 0.12);
+}
+
+.patternSaveBtn {
+  flex-shrink: 0;
+  font-size: var(--text-xs);
+  font-weight: var(--font-semibold);
+  color: var(--color-white);
+  background: var(--color-primary);
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 0 var(--space-3);
+  cursor: pointer;
+  transition: background var(--duration-base);
+}
+.patternSaveBtn:hover:not(:disabled) {
+  background: var(--color-primary-strong);
+}
+.patternSaveBtn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}

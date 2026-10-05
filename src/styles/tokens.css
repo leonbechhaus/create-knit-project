@@ -1,0 +1,132 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   Design tokens — the single source of truth for spacing, type, color,
+   radius, motion and elevation. Components should always reach for a
+   token instead of a literal value; if a value is needed that isn't
+   covered here, add a token rather than inlining a one-off.
+   ═══════════════════════════════════════════════════════════════════════ */
+:root {
+  /* ── Color — base palette ──────────────────────────────────────────── */
+  --color-bg: #f5efe9;
+  --color-bg-strong: #f0e6dc;
+  --color-panel: rgba(251, 248, 244, 0.72);
+  --color-panel-strong: #f0e8df;
+  --color-panel-border: rgba(35, 31, 29, 0.12);
+  --color-surface: #fbf7f2;
+  --color-shadow: rgba(41, 35, 28, 0.12);
+  --color-text: #1d2433;
+  --color-text-muted: #5b6477;
+  --color-primary: #a86a53;
+  --color-primary-strong: #855a45;
+  --color-accent: #e9d9cb;
+  --color-canvas-light: #f1eae2;
+  --color-canvas-dark: #ebdfd4;
+  --color-white: #ffffff;
+  --color-danger: #a03f33;
+  --color-input-bg: rgba(255, 255, 255, 0.55);
+
+  /* ── Color — RGB triplets for alpha compositing ──────────────────────
+     Use as `rgb(var(--color-x-rgb) / <alpha>)` wherever a translucent
+     tint of a base color is needed, instead of a one-off rgba() literal. */
+  --color-primary-rgb: 168, 106, 83;
+  --color-text-rgb: 29, 36, 51;
+  --color-muted-rgb: 91, 100, 119;
+  --color-white-rgb: 255, 255, 255;
+  --color-black-rgb: 0, 0, 0;
+  --color-ink-rgb: 35, 31, 29;
+  --color-border-rgb: 200, 188, 178;
+  --color-border-strong-rgb: 180, 168, 158;
+  --color-surface-rgb: 248, 244, 240;
+  --color-danger-rgb: 160, 63, 51;
+  --color-backdrop-rgb: 30, 24, 20;
+
+  /* ── Spacing scale — 0.25rem (4px) steps, Tailwind-style ─────────────── */
+  --space-0: 0;
+  --space-1: 0.25rem; /* 4px */
+  --space-2: 0.5rem; /* 8px */
+  --space-3: 0.75rem; /* 12px */
+  --space-4: 1rem; /* 16px */
+  --space-5: 1.25rem; /* 20px */
+  --space-6: 1.5rem; /* 24px */
+  --space-7: 1.75rem; /* 28px */
+  --space-8: 2rem; /* 32px */
+  --space-10: 2.5rem; /* 40px */
+  --space-12: 3rem; /* 48px */
+
+  /* ── Radius — kept intentionally flat across the app, one scale step ── */
+  --radius-sm: 0.1875rem; /* 3px — tight chips */
+  --radius-md: 0.25rem; /* 4px — default for almost everything */
+  --radius-lg: 0.5rem; /* 8px — modals, large surfaces */
+  --radius-full: 999px;
+
+  /* ── Type scale ───────────────────────────────────────────────────── */
+  --text-2xs: 0.6875rem; /* 11px */
+  --text-xs: 0.75rem; /* 12px */
+  --text-sm: 0.8125rem; /* 13px */
+  --text-base: 0.875rem; /* 14px */
+  --text-md: 0.9375rem; /* 15px */
+  --text-lg: 1rem; /* 16px */
+  --text-xl: 1.125rem; /* 18px */
+  --text-2xl: 1.375rem; /* 22px */
+  --text-3xl: 1.5rem; /* 24px */
+
+  --font-regular: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+
+  /* ── Motion ───────────────────────────────────────────────────────── */
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --duration-fast: 100ms;
+  --duration-base: 120ms;
+  --duration-slow: 280ms;
+
+  /* ── Layout constants ─────────────────────────────────────────────── */
+  --toolbar-h: 3.25rem; /* 52px */
+  --fab-size: 3.25rem; /* 52px */
+  --panel-w: 21.25rem; /* 340px */
+
+  /* ── z-index scale ────────────────────────────────────────────────── */
+  --z-topbar: 10;
+  --z-toolbar: 20;
+  --z-fab: 25;
+  --z-panel-backdrop: 90;
+  --z-panel: 100;
+  --z-flyout: 150;
+  --z-flyout-sub: 151;
+  --z-modal: 200;
+  --z-modal-nested: 220;
+
+  /* ── Shadows — composable elevation steps ────────────────────────── */
+  --shadow-swatch: 0 0.5rem 1.125rem rgb(var(--color-ink-rgb) / 0.12);
+  --shadow-raised: 0 0.0625rem 0.1875rem rgb(var(--color-black-rgb) / 0.07);
+  --shadow-raised-hover: 0 0.1875rem 0.625rem rgb(var(--color-black-rgb) / 0.1);
+  --shadow-float:
+    0 0.25rem 1.25rem rgb(var(--color-black-rgb) / 0.12),
+    0 0.0625rem 0.25rem rgb(var(--color-black-rgb) / 0.08);
+  --shadow-modal: 0 1.25rem 3.75rem rgb(var(--color-black-rgb) / 0.18);
+  --shadow-flyout:
+    inset 0 0.0625rem 0 rgb(var(--color-white-rgb) / 0.8),
+    0 0.5rem 1.75rem rgb(var(--color-black-rgb) / 0.16),
+    0 0.125rem 0.375rem rgb(var(--color-black-rgb) / 0.1);
+  --inset-top: inset 0 1px 0 rgb(var(--color-white-rgb) / 0.75);
+  --inset-bottom: inset 0 -1px 0 rgb(var(--color-black-rgb) / 0.05);
+
+  /* ── Liquid glass tokens (toolbar / FAB / primary CTA surfaces) ──────── */
+  --glass-bg: rgba(255, 255, 255, 0.18);
+  --glass-bg-hover: rgba(255, 255, 255, 0.28);
+  --glass-border-top: rgba(255, 255, 255, 0.55);
+  --glass-border: rgba(255, 255, 255, 0.32);
+  --glass-blur: blur(1.25rem) saturate(1.9);
+  --glass-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.1), 0 1px 0.125rem rgba(0, 0, 0, 0.08);
+  --glass-shadow-hover:
+    0 0.375rem 1.25rem rgba(0, 0, 0, 0.14), 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
+  --glass-inset-top: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  --glass-inset-bottom: inset 0 -1px 0 rgba(0, 0, 0, 0.06);
+  --glass-primary-bg: rgba(168, 106, 83, 0.72);
+  --glass-primary-bg-hover: rgba(168, 106, 83, 0.85);
+  --glass-primary-border: rgba(255, 200, 170, 0.4);
+  --glass-primary-shadow:
+    0 0.25rem 1.125rem rgba(168, 106, 83, 0.38), 0 1px 0.1875rem rgba(0, 0, 0, 0.1);
+  --glass-primary-shadow-hover:
+    0 0.5rem 1.75rem rgba(168, 106, 83, 0.5), 0 0.125rem 0.375rem rgba(0, 0, 0, 0.14);
+}

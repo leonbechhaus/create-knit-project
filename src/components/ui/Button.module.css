@@ -1,0 +1,130 @@
+/* Shared button system — every variant composes the same base layout and
+   motion, differing only in surface treatment. See Button.tsx for usage. */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  font-size: var(--text-base);
+  font-weight: var(--font-semibold);
+  letter-spacing: 0.01em;
+  border-radius: var(--radius-md);
+  padding: 0.625rem 1.125rem;
+  cursor: pointer;
+  -webkit-font-smoothing: antialiased;
+  transition:
+    transform var(--duration-base) ease,
+    box-shadow var(--duration-base) ease,
+    background var(--duration-base) ease,
+    border-color var(--duration-base) ease,
+    color var(--duration-base) ease;
+}
+
+.btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+  transform: none !important;
+}
+
+.icon {
+  display: inline-flex;
+  align-items: center;
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+.sm {
+  padding: 0.4375rem 0.75rem;
+  font-size: var(--text-sm);
+  gap: 0.3125rem;
+}
+
+/* ── primary — the gradient CTA (submit, calculate, apply, save) ── */
+.primary {
+  background: linear-gradient(
+    160deg,
+    rgba(188, 116, 88, 0.92) 0%,
+    rgb(var(--color-primary-rgb) / 0.86) 50%,
+    rgba(145, 90, 68, 0.9) 100%
+  );
+  border: 1px solid var(--glass-primary-border);
+  box-shadow: var(--inset-top), var(--inset-bottom), var(--glass-primary-shadow);
+  color: var(--color-white);
+  text-shadow: 0 1px 0.125rem rgba(90, 40, 20, 0.35);
+}
+.primary:hover:not(:disabled) {
+  background: linear-gradient(
+    160deg,
+    rgba(200, 126, 96, 0.9) 0%,
+    rgba(178, 116, 90, 0.84) 50%,
+    rgba(158, 100, 76, 0.88) 100%
+  );
+  box-shadow: var(--inset-top), var(--inset-bottom), var(--glass-primary-shadow-hover);
+  transform: translateY(-0.0625rem);
+}
+.primary:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow:
+    var(--inset-top),
+    var(--inset-bottom),
+    0 0.125rem 0.5rem rgb(var(--color-primary-rgb) / 0.28);
+}
+
+/* ── secondary — soft neutral surface button ── */
+.secondary {
+  background: linear-gradient(
+    160deg,
+    rgb(var(--color-white-rgb) / 0.72) 0%,
+    rgba(240, 234, 228, 0.65) 100%
+  );
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--inset-top), var(--inset-bottom), var(--glass-shadow);
+  color: var(--color-text);
+}
+.secondary:hover:not(:disabled) {
+  background: linear-gradient(
+    160deg,
+    rgb(var(--color-white-rgb) / 0.85) 0%,
+    rgba(240, 234, 228, 0.78) 100%
+  );
+  box-shadow: var(--inset-top), var(--inset-bottom), var(--glass-shadow-hover);
+  transform: translateY(-0.0625rem);
+}
+.secondary:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: var(--inset-top), var(--inset-bottom), var(--glass-shadow);
+}
+
+/* ── outline — compact bordered ghost, e.g. "+ New" / "+ Add" ── */
+.outline {
+  background: none;
+  border: 1px solid rgb(var(--color-primary-rgb) / 0.28);
+  color: var(--color-primary-strong);
+}
+.outline:hover:not(:disabled) {
+  background: rgb(var(--color-primary-rgb) / 0.07);
+  border-color: rgb(var(--color-primary-rgb) / 0.5);
+}
+
+/* ── ghost — borderless, muted text button (cancel, secondary dismiss) ── */
+.ghost {
+  background: transparent;
+  border: 1px solid rgb(var(--color-border-rgb) / 0.5);
+  color: var(--color-text-muted);
+}
+.ghost:hover:not(:disabled) {
+  background: rgb(var(--color-primary-rgb) / 0.06);
+  border-color: rgb(var(--color-primary-rgb) / 0.3);
+}
+
+/* ── danger-ghost — destructive text action ── */
+.danger-ghost {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--color-danger);
+}
+.danger-ghost:hover:not(:disabled) {
+  background: rgb(var(--color-danger-rgb) / 0.1);
+}

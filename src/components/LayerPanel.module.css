@@ -1,0 +1,59 @@
+/* ── Layer list ── */
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.linkedIcon {
+  color: var(--color-primary-strong);
+  flex-shrink: 0;
+}
+.unlinkedIcon {
+  color: rgb(var(--color-muted-rgb) / 0.25);
+  flex-shrink: 0;
+}
+
+/* ── Add layer ── */
+.addRow {
+  display: flex;
+  gap: var(--space-1);
+}
+
+.nameInput {
+  flex: 1;
+  min-width: 0;
+  background: rgb(var(--color-white-rgb) / 0.65);
+  border: 1px solid rgb(var(--color-border-rgb) / 0.45);
+  border-radius: var(--radius-md);
+  padding: 0.4375rem 0.625rem;
+  font-size: var(--text-sm);
+  color: var(--color-text);
+  outline: none;
+  transition:
+    border-color var(--duration-base),
+    box-shadow var(--duration-base);
+}
+.nameInput::placeholder {
+  color: rgb(var(--color-muted-rgb) / 0.5);
+}
+.nameInput:focus {
+  border-color: rgb(var(--color-primary-rgb) / 0.5);
+  box-shadow: 0 0 0 0.1875rem rgb(var(--color-primary-rgb) / 0.12);
+}
+
+/* ── Connection section ── */
+.select {
+  background: rgb(var(--color-white-rgb) / 0.65);
+  border: 1px solid rgb(var(--color-border-rgb) / 0.45);
+  border-radius: var(--radius-md);
+  padding: 0.4375rem 0.625rem;
+  font-size: var(--text-sm);
+  color: var(--color-text);
+  outline: none;
+  cursor: pointer;
+  transition: border-color var(--duration-base);
+}
+.select:focus {
+  border-color: rgb(var(--color-primary-rgb) / 0.5);
+}

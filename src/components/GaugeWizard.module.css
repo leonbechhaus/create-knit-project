@@ -1,0 +1,222 @@
+.wizard {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* ── Section ── */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  padding-bottom: var(--space-3);
+  margin-bottom: var(--space-3);
+  border-bottom: 1px solid rgb(var(--color-border-strong-rgb) / 0.18);
+}
+
+/* ── Section header row (label + override toggle) ── */
+.rowHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.125rem;
+}
+.labelReset {
+  margin: 0;
+} /* eyebrow's own bottom margin isn't needed when it shares a flex row with the override toggle */
+
+.overrideToggle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-2xs);
+  font-weight: var(--font-medium);
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+.overrideToggle input[type='checkbox'] {
+  accent-color: var(--color-primary);
+  width: 0.875rem;
+  height: 0.875rem;
+  cursor: pointer;
+}
+
+.connectedNote {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  line-height: 1.4;
+  margin: 0 0 var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  background: rgb(var(--color-primary-rgb) / 0.06);
+  border: 1px solid rgb(var(--color-primary-rgb) / 0.18);
+  border-radius: var(--radius-md);
+}
+.connectedNote strong {
+  color: var(--color-text);
+}
+
+/* ── Field row ── */
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0.4375rem 0;
+  border-bottom: 1px solid rgb(var(--color-border-strong-rgb) / 0.1);
+}
+.row:last-child {
+  border-bottom: none;
+}
+
+.label {
+  flex: 1;
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--color-text);
+}
+
+.hint {
+  font-size: var(--text-2xs);
+  color: var(--color-text-muted);
+  min-width: 3rem;
+  text-align: right;
+}
+
+.numInput {
+  width: 4.25rem;
+  text-align: right;
+  background: rgb(var(--color-white-rgb) / 0.65);
+  border: 1px solid rgb(var(--color-border-rgb) / 0.45);
+  border-radius: var(--radius-md);
+  padding: 0.3125rem 0.5rem;
+  font-size: var(--text-sm);
+  color: var(--color-text);
+  outline: none;
+  transition:
+    border-color var(--duration-base),
+    box-shadow var(--duration-base);
+  -moz-appearance: textfield;
+}
+.numInput::-webkit-inner-spin-button,
+.numInput::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+}
+.numInput:focus {
+  border-color: rgb(var(--color-primary-rgb) / 0.5);
+  box-shadow: 0 0 0 0.1875rem rgb(var(--color-primary-rgb) / 0.12);
+}
+.numInput:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ═══════════════════════════════════
+   Conflict modal content
+   ═══════════════════════════════════ */
+.modalDesc {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ── Individual conflict block ── */
+.conflicts {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.conflict {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  background: rgb(var(--color-white-rgb) / 0.6);
+  border: 1px solid rgb(var(--color-border-rgb) / 0.3);
+  border-radius: var(--radius-md);
+}
+
+.conflictAxis {
+  font-size: var(--text-md);
+  font-weight: var(--font-semibold);
+  color: var(--color-text);
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+
+.conflictRaw {
+  font-size: var(--text-sm);
+  font-weight: var(--font-regular);
+  color: rgb(var(--color-primary-rgb) / 0.9);
+  font-variant-numeric: tabular-nums;
+}
+
+.conflictChoices {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.choice {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.125rem;
+  padding: var(--space-2) var(--space-2);
+  border-radius: var(--radius-md);
+  border: 0.0938rem solid rgb(var(--color-border-rgb) / 0.45);
+  background: rgb(var(--color-white-rgb) / 0.7);
+  cursor: pointer;
+  transition:
+    border-color var(--duration-base),
+    background var(--duration-base),
+    transform var(--duration-fast);
+}
+.choice:hover {
+  background: rgb(var(--color-white-rgb) / 0.95);
+  border-color: rgb(var(--color-primary-rgb) / 0.4);
+}
+.choice:active {
+  transform: scale(0.97);
+}
+
+.choiceActive {
+  border-color: var(--color-primary);
+  background: rgb(var(--color-primary-rgb) / 0.08);
+  box-shadow: 0 0 0 0.1875rem rgb(var(--color-primary-rgb) / 0.12);
+}
+
+.choiceArrow {
+  font-size: var(--text-2xs);
+  color: var(--color-text-muted);
+}
+
+.choiceValue {
+  font-size: var(--text-2xl);
+  font-weight: var(--font-bold);
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.choiceUnit {
+  font-size: var(--text-2xs);
+  color: var(--color-text-muted);
+}
+
+.choiceSep {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+}
+
+.jointValue {
+  font-size: var(--text-lg);
+  font-weight: var(--font-bold);
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums;
+  margin: 0;
+}

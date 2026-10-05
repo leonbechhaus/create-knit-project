@@ -1,0 +1,691 @@
+/* ═══════════════════════════════════════════
+   App shell — full-viewport, editor-first
+   ═══════════════════════════════════════════ */
+.appShell {
+  position: relative;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ═══════════════════════════════════════════
+   Slide-out panels (left & right)
+   ═══════════════════════════════════════════ */
+.slidePanel {
+  position: fixed;
+  top: 0;
+  height: 100dvh;
+  width: 21.25rem;
+  z-index: 100; /* above toolbar (20), FABs (25), backdrop (90) — true offcanvas */
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  padding: var(--space-6) var(--space-5);
+  overflow-y: auto;
+
+  /*
+   * No backdrop-filter here — it forces the GPU to re-sample and re-blur
+   * the content behind the element on every single frame while translateX
+   * is animating, killing 60fps regardless of will-change.
+   * Use an opaque-enough gradient instead; depth comes from the shadow.
+   */
+  background: linear-gradient(170deg, #faf7f3 0%, #f4ede6 100%);
+
+  transition: transform var(--duration-slow) cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+  contain: layout style;
+}
+
+.slidePanelLeft {
+  left: 0;
+  transform: translateX(-100%);
+  border-right: 1px solid rgb(var(--color-white-rgb) / 0.45);
+  box-shadow:
+    0.375rem 0 3rem rgb(var(--color-black-rgb) / 0.14),
+    1px 0 0 rgb(var(--color-white-rgb) / 0.3);
+}
+
+.slidePanelRight {
+  right: 0;
+  transform: translateX(100%);
+  border-left: 1px solid rgb(var(--color-white-rgb) / 0.45);
+  box-shadow:
+    -0.375rem 0 3rem rgb(var(--color-black-rgb) / 0.14),
+    -0.0625rem 0 0 rgb(var(--color-white-rgb) / 0.3);
+}
+
+.slidePanelOpen {
+  transform: translateX(0);
+}
+
+/* Dimming backdrop behind open panel */
+.panelBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 90; /* below panels (100), above everything else */
+  background: rgba(12, 16, 22, 0.22);
+}
+
+/* Panel header row */
+.panelHead {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+/* Title + close-button row inside .panelHead, shared by every offcanvas panel */
+.panelHeadRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: 100%;
+}
+
+/* ═══════════════════════════════════════════
+   Main editor area
+   ═══════════════════════════════════════════ */
+.editorMain {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding-top: var(--toolbar-h); /* clear the fixed toolbar */
+}
+
+/* ═══════════════════════════════════════════
+   Topbar
+   ═══════════════════════════════════════════ */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.25rem 0;
+  position: relative;
+  z-index: 10;
+}
+
+.topbarActions {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  flex-wrap: wrap;
+}
+
+.topbarMeta {
+  display: flex;
+  gap: 0.625rem;
+  color: var(--color-text-muted);
+  font-size: 0.84rem;
+  margin-left: 0.25rem;
+}
+
+/* Active state for nav toggle buttons */
+.activeNavButton {
+  background: linear-gradient(
+    160deg,
+    rgba(188, 116, 88, 0.38) 0%,
+    rgb(var(--color-primary-rgb) / 0.22) 55%,
+    rgba(145, 88, 66, 0.3) 100%
+  ) !important;
+  border-radius: 0.25rem !important;
+  border-color: rgba(255, 190, 155, 0.42) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 220, 190, 0.5),
+    inset 0 -0.0625rem 0 rgba(100, 40, 20, 0.08),
+    0 0.125rem 0.625rem rgb(var(--color-primary-rgb) / 0.22) !important;
+  color: var(--color-primary-strong) !important;
+}
+
+/* ═══════════════════════════════════════════
+   Tool row
+   ═══════════════════════════════════════════ */
+.toolRow {
+  display: flex;
+  gap: 0.625rem;
+  flex-wrap: wrap;
+}
+
+/* ═══════════════════════════════════════════
+   Canvas surface
+   ═══════════════════════════════════════════ */
+.editorSurface {
+  flex: 1;
+  min-height: 0;
+  border-radius: var(--radius-md);
+  border: 1px solid rgb(var(--color-ink-rgb) / 0.08);
+  background: linear-gradient(180deg, rgb(var(--color-white-rgb) / 0.38), rgba(242, 235, 229, 0.5));
+  box-shadow:
+    inset 0 1px 0 rgb(var(--color-white-rgb) / 0.7),
+    0 0.125rem 0.75rem rgb(var(--color-black-rgb) / 0.06);
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding-bottom: 6.25rem;
+}
+
+/* ═══════════════════════════════════════════
+   Typography helpers
+   ═══════════════════════════════════════════ */
+.eyebrow {
+  margin: 0 0 0.25rem;
+  line-height: 1.3;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.68rem;
+  color: var(--color-text-muted);
+}
+
+.h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.h2 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+/* ═══════════════════════════════════════════
+   Shared panel content pieces
+   ═══════════════════════════════════════════ */
+.projectCard {
+  background: linear-gradient(180deg, rgb(var(--color-white-rgb) / 0.7), rgba(241, 232, 225, 0.8));
+  border: 1px solid var(--color-panel-border);
+  border-radius: var(--radius-md);
+  padding: 0.875rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.projectCardActive {
+  border-color: rgb(var(--color-primary-rgb) / 0.4);
+  background: linear-gradient(180deg, rgba(255, 248, 244, 0.8), rgba(232, 205, 190, 0.3));
+}
+
+.projectCardLabel {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.actionStack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  margin-top: auto;
+}
+
+.colorPreviewWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.colorPreview {
+  height: 5rem;
+  border-radius: var(--radius-md);
+  background: hsl(
+    var(--swatch-h, 210) var(--swatch-s, 50%) var(--swatch-l, 50%) / var(--swatch-a, 1)
+  );
+}
+
+.colorPreviewMeta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+}
+
+.panelBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  background: rgb(var(--color-white-rgb) / 0.22);
+  border: 1px solid var(--color-panel-border);
+  border-radius: var(--radius-md);
+  padding: 0.875rem;
+}
+
+.panelLabel,
+.panelLabelRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.74rem;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+}
+
+/* ═══════════════════════════════════════════
+   Tab buttons (left panel)
+   ═══════════════════════════════════════════ */
+.tabBtn {
+  font-size: 0.76rem;
+  font-weight: 600;
+  padding: 0.3125rem 0.625rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition:
+    background var(--duration-base),
+    color var(--duration-base);
+}
+.tabBtn:hover {
+  background: rgb(var(--color-primary-rgb) / 0.08);
+  color: var(--color-primary-strong);
+}
+.tabBtnActive {
+  background: rgb(var(--color-primary-rgb) / 0.12);
+  border-color: rgb(var(--color-primary-rgb) / 0.25);
+  color: var(--color-primary-strong);
+}
+
+/* ═══════════════════════════════════════════
+   Icon buttons + zoom controls
+   ═══════════════════════════════════════════ */
+.iconButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.125rem;
+  height: 2.125rem;
+  border: 1px solid rgba(200, 190, 182, 0.45);
+  border-radius: var(--radius-md);
+  background: rgb(var(--color-white-rgb) / 0.65);
+  box-shadow:
+    inset 0 1px 0 rgb(var(--color-white-rgb) / 0.8),
+    0 1px 0.1875rem rgb(var(--color-black-rgb) / 0.07);
+  color: var(--color-text);
+  font-size: 1rem;
+  cursor: pointer;
+  transition:
+    background var(--duration-base),
+    transform var(--duration-base),
+    box-shadow var(--duration-base);
+}
+.iconButton:hover:not(:disabled) {
+  background: rgb(var(--color-white-rgb) / 0.9);
+  box-shadow:
+    inset 0 1px 0 rgb(var(--color-white-rgb) / 0.9),
+    0 0.125rem 0.375rem rgb(var(--color-black-rgb) / 0.1);
+  transform: translateY(-0.0625rem);
+}
+.iconButton:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.zoomGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.125rem;
+  background: rgb(var(--color-white-rgb) / 0.55);
+  border: 1px solid rgba(200, 190, 182, 0.4);
+  border-radius: var(--radius-md);
+  box-shadow:
+    inset 0 1px 0 rgb(var(--color-white-rgb) / 0.75),
+    0 1px 0.1875rem rgb(var(--color-black-rgb) / 0.06);
+  padding: 0.125rem 0.25rem;
+}
+
+.zoomLabel {
+  min-width: 2.875rem;
+  text-align: center;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  padding: 0.25rem 0.375rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: background var(--duration-base);
+}
+.zoomLabel:hover {
+  border-radius: var(--radius-sm);
+  background: rgb(var(--color-primary-rgb) / 0.1);
+  color: var(--color-primary-strong);
+}
+
+/* ═══════════════════════════════════════════
+   Fixed top toolbar
+   ═══════════════════════════════════════════ */
+.fixedToolbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--toolbar-h);
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0 0.875rem;
+  background: rgba(248, 244, 240, 0.96);
+  border-bottom: 1px solid rgb(var(--color-border-rgb) / 0.28);
+  box-shadow: 0 1px 0.375rem rgb(var(--color-black-rgb) / 0.07);
+}
+
+.toolbarProject {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 11.25rem;
+  margin-right: auto;
+}
+
+.toolbarDivider {
+  display: block;
+  width: 1px;
+  height: 1.375rem;
+  background: rgb(var(--color-border-strong-rgb) / 0.35);
+  margin: 0 0.375rem;
+  flex-shrink: 0;
+}
+
+.toolbarMeta {
+  margin-left: auto;
+  font-size: 0.74rem;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+.toolbarMetaItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.1875rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.toolbarMetaItem svg {
+  flex-shrink: 0;
+  opacity: 0.6;
+}
+
+.toolbarOnionSelect {
+  font-size: 0.74rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  background: rgb(var(--color-border-rgb) / 0.18);
+  border: 1px solid rgb(var(--color-border-rgb) / 0.4);
+  border-radius: var(--radius-md);
+  padding: 0.25rem 0.375rem;
+  max-width: 7.5rem;
+  cursor: pointer;
+}
+.toolbarOnionSelect:hover {
+  color: var(--color-primary-strong);
+  border-color: var(--color-primary-strong);
+}
+
+/* ═══════════════════════════════════════════
+   Floating action buttons
+   ═══════════════════════════════════════════ */
+.fab {
+  position: fixed;
+  bottom: 1.5rem;
+  z-index: 25;
+  width: var(--fab-size);
+  height: var(--fab-size);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--color-text);
+  background: rgba(248, 244, 240, 0.96);
+  border: 1px solid rgb(var(--color-border-rgb) / 0.4);
+  box-shadow:
+    inset 0 1px 0 rgb(var(--color-white-rgb) / 0.8),
+    0 0.25rem 1.25rem rgb(var(--color-black-rgb) / 0.12),
+    0 1px 0.25rem rgb(var(--color-black-rgb) / 0.08);
+  transition:
+    transform 130ms ease,
+    box-shadow 130ms ease,
+    background 130ms ease;
+}
+
+.fab:hover {
+  background: rgba(255, 252, 249, 0.98);
+  box-shadow:
+    inset 0 1px 0 rgb(var(--color-white-rgb) / 0.9),
+    0 0.5rem 1.75rem rgb(var(--color-black-rgb) / 0.15),
+    0 0.125rem 0.375rem rgb(var(--color-black-rgb) / 0.1);
+  transform: translateY(-0.125rem);
+}
+
+.fab:active {
+  transform: translateY(0);
+}
+
+.fabLeft {
+  left: 1.25rem;
+}
+.fabRight {
+  right: 1.25rem;
+}
+
+.fabActive {
+  background: linear-gradient(160deg, rgba(188, 116, 88, 0.82) 0%, rgba(145, 90, 68, 0.8) 100%);
+  border-color: rgba(200, 130, 100, 0.4);
+  color: #fff;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 220, 190, 0.5),
+    0 0.375rem 1.5rem rgb(var(--color-primary-rgb) / 0.42),
+    0 0.125rem 0.375rem rgb(var(--color-black-rgb) / 0.1);
+}
+
+.fabActive:hover {
+  background: linear-gradient(160deg, rgba(200, 126, 96, 0.9) 0%, rgba(158, 100, 76, 0.88) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 220, 190, 0.6),
+    0 0.625rem 2rem rgb(var(--color-primary-rgb) / 0.5),
+    0 0.1875rem 0.5rem rgb(var(--color-black-rgb) / 0.12);
+}
+
+/* ═══════════════════════════════════════════
+   Coordinate status bar — fixed bottom-center,
+   between the two FABs
+   ═══════════════════════════════════════════ */
+.coordBar {
+  position: fixed;
+  left: 50%;
+  bottom: 1.5rem;
+  transform: translateX(-50%);
+  z-index: 25;
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  height: var(--fab-size);
+  padding: 0 1rem;
+  border-radius: var(--radius-md);
+  background: rgba(248, 244, 240, 0.96);
+  border: 1px solid rgb(var(--color-border-rgb) / 0.4);
+  box-shadow:
+    inset 0 1px 0 rgb(var(--color-white-rgb) / 0.8),
+    0 0.25rem 1.25rem rgb(var(--color-black-rgb) / 0.12),
+    0 1px 0.25rem rgb(var(--color-black-rgb) / 0.08);
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--color-text);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.coordBarItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text);
+}
+
+.coordBarItem svg {
+  flex-shrink: 0;
+  opacity: 0.6;
+}
+
+.coordBarSep {
+  color: var(--color-text-muted);
+  opacity: 0.6;
+}
+
+.coordBarMuted {
+  color: var(--color-text-muted);
+  font-weight: 400;
+  margin-left: 0.125rem;
+}
+
+.coordBarDivider {
+  width: 1px;
+  height: 1rem;
+  background: rgb(var(--color-border-strong-rgb) / 0.35);
+}
+
+/* ── Color studio slider group (flat, no card) ── */
+.sliderGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* ── Project summary in config tab ── */
+.projectSummary {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1875rem;
+}
+
+.projectSummaryName {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.projectSummaryMeta {
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+}
+
+/* ── Gauge field row (project-level default gauge editor) ── */
+.gaugeFieldRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.625rem;
+  font-size: 0.84rem;
+  font-weight: 500;
+  color: var(--color-text);
+}
+.gaugeFieldRow input {
+  width: 4.25rem;
+  text-align: right;
+  background: rgb(var(--color-white-rgb) / 0.65);
+  border: 1px solid rgb(var(--color-border-rgb) / 0.45);
+  border-radius: var(--radius-md);
+  padding: 0.3125rem 0.5rem;
+  font-size: 0.84rem;
+  color: var(--color-text);
+  outline: none;
+  -moz-appearance: textfield;
+}
+.gaugeFieldRow input::-webkit-inner-spin-button,
+.gaugeFieldRow input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+}
+.gaugeFieldRow input:focus {
+  border-color: rgb(var(--color-primary-rgb) / 0.5);
+  box-shadow: 0 0 0 0.1875rem rgb(var(--color-primary-rgb) / 0.12);
+}
+
+.hintText {
+  font-size: 0.76rem;
+  color: var(--color-text-muted);
+  line-height: 1.45;
+  margin: 0;
+}
+.hintText strong {
+  color: var(--color-text);
+}
+
+/* ── Section divider — thin rule between panel sections ── */
+.divider {
+  height: 1px;
+  background: rgb(var(--color-border-strong-rgb) / 0.22);
+  border: none;
+  flex-shrink: 0;
+  /* horizontal extent matches panel content; no extra margin needed —
+     gap on the parent flex column provides vertical breathing room */
+}
+
+/* ── Shared offcanvas tab body shape (Library / Config / Layers) ──
+   Top-level wrapper for every ProjectPanel tab body, plus a generic
+   section grouping (eyebrow label + content) used within it. Keeps the
+   three tabs structurally identical: panel > [section, divider, section, …] */
+.tabPanel {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  gap: 0.75rem;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* ── Toolbar swatch quick-access chips ── */
+/* ── Toolbar swatch overflow chip ── */
+.swatchOverflow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 1.375rem;
+  min-width: 1.75rem;
+  padding: 0 0.375rem;
+  border-radius: var(--radius-md);
+  border: 1px solid rgb(var(--color-border-rgb) / 0.45);
+  background: rgb(var(--color-white-rgb) / 0.55);
+  box-shadow:
+    inset 0 1px 0 rgb(var(--color-white-rgb) / 0.8),
+    0 1px 0.125rem rgb(var(--color-black-rgb) / 0.06);
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  flex-shrink: 0;
+  letter-spacing: 0.01em;
+  transition:
+    background var(--duration-base),
+    color var(--duration-base),
+    box-shadow var(--duration-base);
+}
+.swatchOverflow:hover {
+  background: rgb(var(--color-white-rgb) / 0.85);
+  color: var(--color-primary-strong);
+  box-shadow:
+    inset 0 1px 0 rgb(var(--color-white-rgb) / 0.9),
+    0 0.125rem 0.3125rem rgb(var(--color-black-rgb) / 0.1);
+}
